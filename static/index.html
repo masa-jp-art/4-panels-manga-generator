@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>4-Panel Manga Generator</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>4-Panel Manga Generator</h1>
+            <p>Generate manga panels using Google Gemini AI</p>
+        </header>
+
+        <main>
+            <!-- Usage Instructions -->
+            <section class="section">
+                <details open>
+                    <summary><h2 style="display: inline;">How to Use / 使い方</h2></summary>
+                    <div class="instructions">
+                        <h3>📖 Basic Usage / 基本的な使い方</h3>
+                        <ol>
+                            <li>
+                                <strong>(Optional) Upload or select a layout reference image</strong><br>
+                                <strong>（任意）レイアウトリファレンス画像をアップロードまたは選択</strong><br>
+                                <em>→ The AI will follow this layout exactly / AIはこのレイアウトに厳密に従います</em>
+                            </li>
+                            <li>
+                                <strong>Add characters</strong> and select their reference images<br>
+                                <strong>キャラクターを追加</strong>し、リファレンス画像を選択
+                            </li>
+                            <li>
+                                <strong>Fill in scene descriptions</strong> for each of the 4 panels<br>
+                                4つのパネルそれぞれの<strong>シーン説明を入力</strong>
+                            </li>
+                            <li>
+                                <strong>Click "Generate Image"</strong> and wait for the result<br>
+                                <strong>「Generate Image」をクリック</strong>して結果を待つ
+                            </li>
+                        </ol>
+
+                        <h3>⚠️ Important Notes / 重要な注意事項</h3>
+                        <ul>
+                            <li>
+                                <strong>Output aspect ratio is fixed to 3:4 (Portrait)</strong><br>
+                                <strong>出力画像のアスペクト比は3:4（縦長）に固定されています</strong><br>
+                                <em>→ This ensures optimal compatibility with layout references / レイアウトリファレンスとの最適な互換性を確保します</em>
+                            </li>
+                            <li>
+                                <strong>Speech bubbles will be EMPTY</strong> (no dialogue text)<br>
+                                <strong>吹き出しは空白になります</strong>（セリフテキストは入りません）<br>
+                                <em>→ You can add text later / 後でテキストを追加できます</em>
+                            </li>
+                            <li>
+                                <strong>No text will be generated</strong> (no sound effects, no words)<br>
+                                <strong>テキストは生成されません</strong>（効果音や文字は入りません）<br>
+                                <em>→ Only manga symbols (!, ?, ♪, etc.) may appear / 漫画記号（！、？、♪など）のみ表示される場合があります</em>
+                            </li>
+                            <li>
+                                <strong>Layout reference is strictly followed</strong> when provided<br>
+                                <strong>レイアウトリファレンスは厳密に遵守されます</strong>（提供された場合）<br>
+                                <em>→ Panel positions, sizes, and arrangement will match exactly within the 3:4 canvas / 3:4キャンバス内でパネルの位置、サイズ、配置が正確に一致します</em>
+                            </li>
+                            <li>
+                                <strong>Character consistency is maintained</strong> across panels<br>
+                                <strong>キャラクターの一貫性は維持されます</strong>（全パネルを通して）<br>
+                                <em>→ Based on the reference images provided / 提供されたリファレンス画像に基づきます</em>
+                            </li>
+                            <li>
+                                <strong>Full-color flat illustration style</strong><br>
+                                <strong>フルカラーのフラットイラストスタイル</strong><br>
+                                <em>→ Characters are emphasized with vibrant colors and thicker lines / キャラクターは鮮やかな色と太い線で強調されます</em>
+                            </li>
+                        </ul>
+
+                        <h3>💡 Tips / ヒント</h3>
+                        <ul>
+                            <li>
+                                <strong>Use clear, descriptive scene descriptions</strong> for best results<br>
+                                最良の結果を得るために<strong>明確で説明的なシーン説明を使用</strong>してください
+                            </li>
+                            <li>
+                                <strong>Character reference images</strong> help maintain visual consistency<br>
+                                <strong>キャラクターリファレンス画像</strong>により視覚的な一貫性が保たれます
+                            </li>
+                            <li>
+                                <strong>Layout reference is highly recommended</strong> for professional results<br>
+                                プロフェッショナルな結果を得るために<strong>レイアウトリファレンスの使用を強く推奨</strong>します
+                            </li>
+                        </ul>
+                    </div>
+                </details>
+            </section>
+
+            <!-- Image Settings -->
+            <section class="section">
+                <h2>Image Settings</h2>
+                <div class="form-group">
+                    <label>Aspect Ratio:</label>
+                    <div class="fixed-setting">
+                        <strong>3:4 (Portrait)</strong>
+                        <small>Fixed aspect ratio to ensure layout reference compatibility / レイアウトリファレンスとの互換性のため固定</small>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Reference Images -->
+            <section class="section">
+                <h2>Reference Images</h2>
+
+                <!-- Layout Reference -->
+                <div class="form-group">
+                    <label>Layout Reference:</label>
+                    <select id="layoutRefSelect">
+                        <option value="">-- Select from existing --</option>
+                    </select>
+                    <input type="file" id="layoutRefUpload" accept="image/*">
+                    <small>Select an existing layout or upload a new one</small>
+                </div>
+
+                <!-- Characters -->
+                <div id="charactersContainer">
+                    <h3>Characters</h3>
+                    <div id="charactersList"></div>
+                    <button type="button" id="addCharacterBtn" class="btn btn-secondary">+ Add Character</button>
+                </div>
+            </section>
+
+            <!-- 4 Panels -->
+            <section class="section">
+                <h2>4-Panel Scenes</h2>
+                <div id="scenesContainer"></div>
+            </section>
+
+            <!-- Generate Button -->
+            <div class="actions">
+                <button type="button" id="generateBtn" class="btn btn-primary">Generate Image</button>
+            </div>
+
+            <!-- Loading State -->
+            <div id="loadingState" class="loading-state hidden">
+                <div class="spinner"></div>
+                <p>Generating manga panels...</p>
+            </div>
+
+            <!-- Results -->
+            <section id="resultsSection" class="section hidden">
+                <h2>Results</h2>
+
+                <!-- Thought Process (Collapsible) -->
+                <details id="thoughtProcessDetails">
+                    <summary>Thought Process</summary>
+                    <div id="thoughtProcessContent" class="thought-process"></div>
+                </details>
+
+                <!-- Generated Image -->
+                <div id="generatedImageContainer" class="hidden">
+                    <img id="generatedImage" alt="Generated manga panel">
+                    <div class="actions">
+                        <a id="downloadBtn" class="btn btn-secondary" download="manga-panel.png">Download Image</a>
+                        <button type="button" id="retryFromThoughtBtn" class="btn btn-secondary">Retry from Thought</button>
+                        <button type="button" id="retryImageOnlyBtn" class="btn btn-secondary">Retry Image Only</button>
+                    </div>
+                </div>
+
+                <!-- Error Message -->
+                <div id="errorMessage" class="error-message hidden"></div>
+            </section>
+        </main>
+
+        <footer>
+            <p>Powered by Google Gemini API</p>
+        </footer>
+    </div>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>
